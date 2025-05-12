@@ -1,0 +1,9 @@
+{
+  "author": "https://github.com/pBread",
+  "name": "signal-conversation-relay-azure-simple",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

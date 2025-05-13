@@ -1,15 +1,58 @@
+const NS_PAD = 30;
+
+const CC = {
+  red: "\x1b[31m",
+  yellow: "\x1b[33m",
+
+  cyan: "\x1b[36m",
+  green: "\x1b[32m",
+  magenta: "\x1b[35m",
+
+  invert: "\x1b[7m",
+
+  clear: "\x1b[0m",
+};
+
+let start = Date.now();
+
 export const log = {
-  info: (title: string, ...args: any) =>
-    console.info(`${title}`, ...args.map(stringify)),
-  error: (title: string, ...args: any) =>
-    console.info(`${title}`, ...args.map(stringify)),
-  xml: (title: string, xml: string) =>
-    console.info(`${title}`, prettyXML(redactPhoneNumbers(xml))),
+  webhook: (label: string, ...args: any) => {
+    start = Date.now();
+    console.info(title(label), ...args.map(stringify));
+  },
+
+  info: (label: string, ...args: any) =>
+    console.info(title(label), ...args.map(stringify)),
+  error: (label: string, ...args: any) =>
+    console.error(title(label), ...args.map(stringify)),
+  xml: (label: string, xml: string) =>
+    console.log(title(label), "\n", prettyXML(redactPhoneNumbers(xml))),
 };
 
 // ========================================
 // Helpers
 // ========================================
+function title(label: string) {
+  const elapsed = sinceStart();
+
+  const msg = `${elapsed}  ${label}`.padEnd(NS_PAD, " ");
+
+  return `${CC.invert}${msg}${CC.clear}`;
+}
+
+function sinceStart() {
+  const elapsed = Date.now() - start;
+  const min = Math.floor(elapsed / (60 * 1000));
+  const sec = Math.floor((elapsed % (60 * 1000)) / 1000);
+  const ms = elapsed % 1000;
+
+  return (
+    `${min.toString().padStart(2, "0")}m ` +
+    `${sec.toString().padStart(2, "0")}s ` +
+    `${ms.toString().padStart(3, "0")}ms`
+  );
+}
+
 function stringify(item: any) {
   if (typeof item === "object") return redactPhoneNumbers(JSON.stringify(item));
   if (typeof item === "string") return redactPhoneNumbers(item);

@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true })).use(express.json());
 // Incoming Call Webhook Handler
 app.post("/incoming-call", async (req, res) => {
   const { CallSid } = req.body as IncomingCallPayload;
-  log.info("incoming-call", CallSid);
+  log.webhook("/incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
   const connect = response.connect();
@@ -43,7 +43,7 @@ app.post("/incoming-call", async (req, res) => {
   cr.parameter({ name: "greeting", value: args.welcomeGreeting });
 
   const twiml = response.toString();
-  log.xml("twiml\n", twiml);
+  log.xml("twiml", twiml);
   res.type("text/xml").send(twiml);
 });
 
@@ -87,5 +87,5 @@ app.ws("/relay", (ws, req) => {
 });
 
 app.listen(PORT, () => {
-  log.info(`server running on http://localhost:${PORT}`);
+  console.info(`server running on http://localhost:${PORT}`);
 });

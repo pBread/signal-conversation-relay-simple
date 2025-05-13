@@ -24,14 +24,8 @@ app.post("/incoming-call", async (req, res) => {
   log.webhook("/incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
-  response.say("Ahoy, press 1 for ...");
-  response.gather({
-    action: `wss://${HOSTNAME}/gather`,
-    input: ["dtmf"],
-    finishOnKey: "#",
-  });
 
-  log.xml("twiml", response.toString()); // todo: add formatting to logger for Gather
+  log.xml("twiml", response.toString()); // todo: add formatting to logger for Gather; todo: remove
   res.type("text/xml").send(response.toString());
 });
 

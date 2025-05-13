@@ -11,7 +11,8 @@ export const log = {
 // Helpers
 // ========================================
 function stringify(item: any) {
-  if (typeof item === "object") return JSON.stringify(item);
+  if (typeof item === "object") return redactPhoneNumbers(JSON.stringify(item));
+  if (typeof item === "string") return redactPhoneNumbers(item);
 
   return item;
 }
@@ -120,10 +121,12 @@ export function redactPhoneNumbers(input: string): string {
         countryCode && countryCode.includes("+") ? countryCode : "";
 
       // Count how many digits need to be redacted (excluding country code and last four)
-      const digitsInAreaCodeAndPrefix = 6; // 3 for area code + 3 for prefix
+      const digitsInAreaCodeAndPrefix = 11; // 3 for area code + 3 for prefix
 
       // Create bullet points for redacted digits
       const bullets = "•".repeat(digitsInAreaCodeAndPrefix);
+
+      return bullets;
 
       return `${preservedCountryCode}${bullets}${lastFour}`;
     },

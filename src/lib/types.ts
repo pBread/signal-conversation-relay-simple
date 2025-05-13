@@ -23,6 +23,7 @@ export class TypedEventEmitter<Events = {}> extends EventEmitter {
 }
 
 export interface Store {
+  context?: Record<string, any>;
   msgs: ResponseInputItem[];
 }
 

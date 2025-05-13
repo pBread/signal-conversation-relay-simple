@@ -24,23 +24,33 @@ app.post("/incoming-call", async (req, res) => {
   log.webhook("/incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
-  const connect = response.connect();
+  // IVR
+  response.say("Hello there");
 
-  const args: ConversationRelayParams = {
-    url: `wss://${HOSTNAME}/relay`,
-    welcomeGreeting:
-      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
+  response.gather({
+    action: `https://${HOSTNAME}/gather`,
+    partialResultCallback: `https://${HOSTNAME}/gather`,
+    finishOnKey: "#",
+  });
 
-    transcriptionProvider: "deepgram",
-    speechModel: "nova-3-general",
+  // // RELAY
+  // const connect = response.connect();
 
-    ttsProvider: "ElevenLabs",
-    voice: voices.en.jessica_anne,
-  };
+  // const args: ConversationRelayParams = {
+  //   url: `wss://${HOSTNAME}/relay`,
+  //   welcomeGreeting:
+  //     "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
 
-  const cr = connect.conversationRelay(args);
+  //   transcriptionProvider: "deepgram",
+  //   speechModel: "nova-3-general",
 
-  cr.parameter({ name: "greeting", value: args.welcomeGreeting });
+  //   ttsProvider: "ElevenLabs",
+  //   voice: voices.en.jessica_anne,
+  // };
+
+  // const cr = connect.conversationRelay(args);
+
+  // cr.parameter({ name: "greeting", value: args.welcomeGreeting });
 
   const twiml = response.toString();
   log.xml("twiml", twiml);
@@ -53,13 +63,14 @@ app.ws("/relay", (ws, req) => {
 
   const wss = new TypedWs(ws);
 
-  const store: Store = { msgs: [] };
+  const store: Store = { context: {}, msgs: [] };
   const llm = new LLMService(store);
 
   // payload with session details
   wss.on("setup", (ev) => {
     log.info("relay.setup", ev);
 
+    // RELAY
     const { greeting } = ev;
     if (greeting) store.msgs.push({ role: "assistant", content: greeting });
   });
@@ -69,6 +80,7 @@ app.ws("/relay", (ws, req) => {
     if (!ev.last) return; // ignore partial speech
     log.cyan("relay.prompt", ev);
 
+    // RELAY
     store.msgs.push({ role: "user", content: ev.voicePrompt });
     llm.run();
   });
@@ -82,8 +94,14 @@ app.ws("/relay", (ws, req) => {
   llm.on("text", (text, last, transcript) => {
     if (last) log.pink("llm.text", transcript);
 
+    // RELAY
     wss.sendTextToken(text, last);
   });
+});
+
+app.post("/gather", (req, res) => {
+  log.info("gather", `digits ${req.body.Digits}`);
+  res.send("");
 });
 
 app.listen(PORT, () => {

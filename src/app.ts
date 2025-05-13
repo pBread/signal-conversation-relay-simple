@@ -54,9 +54,6 @@ app.ws("/relay", (ws, req) => {
   wss.on("prompt", (ev) => {
     if (!ev.last) return; // ignore partial speech
     log.cyan("relay.prompt", ev);
-
-    store.msgs.push({ role: "assistant", content: ev.voicePrompt });
-    llm.run();
   });
 
   // user interrupts the bot
@@ -67,8 +64,6 @@ app.ws("/relay", (ws, req) => {
   // llm wants to speak
   llm.on("text", (text, last, transcript) => {
     if (last) log.pink("llm.text", transcript);
-
-    wss.sendTextToken(text, last);
   });
 });
 

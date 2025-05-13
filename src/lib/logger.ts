@@ -90,17 +90,22 @@ function stringify(item: any) {
 
 export function prettyXML(xml: string): string {
   const maxParameterValueLength = 50;
-  const indent = "  ";
+  const indent = "  "; // two-space indent everywhere
 
-  // squash superfluous whitespace between tags
-  let formatted = xml.replace(/>\s*</g, "><");
+  /* ──────────────────────────────
+   * 0. Remove stray whitespace
+   * ────────────────────────────── */
+  let formatted = xml
+    .replace(/>\s*</g, "><")
+    .replace("rapid-champion-snake", "•".repeat(9));
 
-  /* ───────────────────────────────────
-   *  1.  ConversationRelay  (unchanged)
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 1. ConversationRelay (unchanged, but
+   *    uses `indent` instead of “\t”)
+   * ────────────────────────────── */
   formatted = formatted.replace(
     /<ConversationRelay\b([^>]*)>/g,
-    (match, rawAttrs) => {
+    (_match, rawAttrs) => {
       const selfClose = rawAttrs.trim().endsWith("/");
       const attrsPart = selfClose
         ? rawAttrs.trim().slice(0, -1).trim()
@@ -108,21 +113,16 @@ export function prettyXML(xml: string): string {
 
       const attrs = attrsPart.match(/\S+="[^"]*"/g) || [];
 
-      const prettyAttrs = attrs.map((a) => `\t${a}`).join("\n");
+      const prettyAttrs = attrs.map((a) => `\n${indent}${a}`).join("");
 
-      return `<ConversationRelay\n${prettyAttrs}\n${selfClose ? "/>" : ">"}`;
+      return `<ConversationRelay${prettyAttrs}${selfClose ? "/>" : ">"}`;
     },
   );
 
-  /* ───────────────────────────────────
-   *  2.  Gather  (new)
-   *      Produces e.g.
-   *      <Gather
-   *        action="…"
-   *        input="…"
-   *        finishOnKey="#"/>
-   * ─────────────────────────────────── */
-  formatted = formatted.replace(/<Gather\b([^>]*)>/g, (match, rawAttrs) => {
+  /* ──────────────────────────────
+   * 2. Gather  (new)
+   * ────────────────────────────── */
+  formatted = formatted.replace(/<Gather\b([^>]*)>/g, (_match, rawAttrs) => {
     const selfClose = rawAttrs.trim().endsWith("/");
     const attrsPart = selfClose
       ? rawAttrs.trim().slice(0, -1).trim()
@@ -130,90 +130,99 @@ export function prettyXML(xml: string): string {
 
     const attrs = attrsPart.match(/\S+="[^"]*"/g) || [];
 
-    // Combine the last attribute and "/>" on the same line when self-closing
-    const prettyAttrs = attrs
-      .map((a, i) => `\t${a}${selfClose && i === attrs.length - 1 ? "/>" : ""}`)
-      .join("\n");
+    // each attr on its own line, prefixed with `indent`
+    const prettyAttrs = attrs.map((a) => `\n${indent}${a}`).join("");
 
-    return selfClose
-      ? `<Gather\n${prettyAttrs}` // already closed above
-      : `<Gather\n${prettyAttrs}\n>`;
+    return `<Gather${prettyAttrs}${selfClose ? "/>" : ">"}`;
   });
 
-  /* ───────────────────────────────────
-   *  3.  Re-insert newlines before tags
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 3. Insert newline before every “<”
+   * ────────────────────────────── */
   formatted = formatted.replace(/</g, "\n<");
 
-  /* ───────────────────────────────────
-   *  4.  Handle CDATA / comments
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 4. Shield CDATA + comments
+   * ────────────────────────────── */
   const cdataAndComments: string[] = [];
   let cdataIndex = 0;
   formatted = formatted.replace(
     /(<!\[CDATA\[[\s\S]*?\]\]>|<!--[\s\S]*?-->)/g,
-    (match) => {
-      cdataAndComments.push(match);
+    (m) => {
+      cdataAndComments.push(m);
       return `###CDATA_COMMENT_${cdataIndex++}###`;
     },
   );
 
-  /* ───────────────────────────────────
-   *  5.  Truncate <Parameter value="…">
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 5. Truncate very long <Parameter …>
+   * ────────────────────────────── */
   const parameterValues: string[] = [];
   let valueIndex = 0;
   formatted = formatted.replace(
     /<Parameter[^>]*\svalue="([^"]*)"[^>]*>/g,
-    (match, value) => {
-      if (value.length > maxParameterValueLength) {
-        parameterValues.push(value);
-        return match.replace(value, `[TRUNCATED_VALUE_${valueIndex++}]`);
+    (m, v) => {
+      if (v.length > maxParameterValueLength) {
+        parameterValues.push(v);
+        return m.replace(v, `[TRUNCATED_VALUE_${valueIndex++}]`);
       }
-      return match;
+      return m;
     },
   );
 
-  /* ───────────────────────────────────
-   *  6.  Pretty-print with indentation
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 6. Indentation pass
+   * ────────────────────────────── */
   let result = "";
-  let indentLevel = 0;
-  const lines = formatted.split("\n");
+  let level = 0;
+  for (const rawLine of formatted.split("\n")) {
+    const line = rawLine.trimEnd();
+    if (!line) continue;
 
-  for (let line of lines) {
-    if (line.trim() === "") continue;
+    const isClosing = line.startsWith("</");
+    const isSelfClosing = line.includes("/>");
+    const isOpeningAndClosing =
+      !isSelfClosing && line.startsWith("<") && line.includes("</");
 
-    const isClosingTag = line.startsWith("</");
-    const isSelfClosingTag = line.includes("/>");
-    const isOpeningAndClosingTag =
-      !isSelfClosingTag && line.startsWith("<") && line.includes("</");
+    if (isClosing || isOpeningAndClosing) level--;
 
-    if (isClosingTag || isOpeningAndClosingTag) indentLevel--;
-
-    result += `${indent.repeat(Math.max(0, indentLevel))}${line}\n`;
+    result += `${indent.repeat(Math.max(0, level))}${line}\n`;
 
     if (
-      !isClosingTag &&
-      !isSelfClosingTag &&
-      !isOpeningAndClosingTag &&
+      !isClosing &&
+      !isSelfClosing &&
+      !isOpeningAndClosing &&
       line.startsWith("<")
     ) {
-      indentLevel++;
+      level++;
     }
   }
 
-  /* ───────────────────────────────────
-   *  7.  Restore truncated values / CDATA
-   * ─────────────────────────────────── */
+  /* ──────────────────────────────
+   * 7. Restore truncated values / CDATA
+   * ────────────────────────────── */
   result = result.replace(/\[TRUNCATED_VALUE_(\d+)\]/g, (_, i) => {
     const v = parameterValues[+i];
     return `${v.substring(0, maxParameterValueLength)}… (${v.length} chars)`;
   });
 
-  result = result.replace(/###CDATA_COMMENT_(\d+)###/g, (_, i) => {
-    return cdataAndComments[+i];
-  });
+  result = result.replace(
+    /###CDATA_COMMENT_(\d+)###/g,
+    (_, i) => cdataAndComments[+i],
+  );
+
+  /* ──────────────────────────────
+   * 8. Collapse simple <Say> lines
+   *    Turns:
+   *      <Say>hello
+   *      </Say>
+   *    into:
+   *      <Say>hello</Say>
+   * ────────────────────────────── */
+  result = result.replace(
+    /<Say>([^<\n]+)\n\s*<\/Say>/g,
+    (_m, text) => `<Say>${text.trim()}</Say>`,
+  );
 
   return result.trim();
 }

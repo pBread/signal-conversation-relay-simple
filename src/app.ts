@@ -25,6 +25,13 @@ app.post("/incoming-call", async (req, res) => {
 
   const response = new twilio.twiml.VoiceResponse();
 
+  response.say("Ahoy, press 1, or 2, or 3");
+  response.gather({
+    action: `https://${HOSTNAME}/gather`,
+    input: ["dtmf"],
+    finishOnKey: "#",
+  });
+
   log.xml("twiml", response.toString()); // todo: add formatting to logger for Gather; todo: remove
   res.type("text/xml").send(response.toString());
 });

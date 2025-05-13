@@ -24,23 +24,7 @@ app.post("/incoming-call", async (req, res) => {
   log.info("incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
-  const connect = response.connect();
-
-  const args: ConversationRelayParams = {
-    url: `wss://${HOSTNAME}/relay`,
-    welcomeGreeting:
-      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
-
-    transcriptionProvider: "deepgram",
-    speechModel: "nova-3-general",
-
-    ttsProvider: "ElevenLabs",
-    voice: voices.en.jessica_anne,
-  };
-
-  const cr = connect.conversationRelay(args);
-
-  cr.parameter({ name: "greeting", value: args.welcomeGreeting });
+  response.say("Hello Signal");
 
   const twiml = response.toString();
   log.xml("twiml\n", twiml);
@@ -59,18 +43,12 @@ app.ws("/relay", (ws, req) => {
   // payload with session details
   wss.on("setup", (ev) => {
     log.info("on.setup", ev);
-
-    const { greeting } = ev;
-    if (greeting) store.msgs.push({ role: "assistant", content: greeting });
   });
 
   // user speaking
   wss.on("prompt", (ev) => {
     if (!ev.last) return; // ignore partial speech
     log.info("on.prompt", ev);
-
-    store.msgs.push({ role: "user", content: ev.voicePrompt });
-    llm.run();
   });
 
   // user interrupts the bot
@@ -81,8 +59,6 @@ app.ws("/relay", (ws, req) => {
   // llm wants to speak
   llm.on("text", (text, last, transcript) => {
     if (last) log.info("llm.text", transcript);
-
-    wss.sendTextToken(text, last);
   });
 });
 

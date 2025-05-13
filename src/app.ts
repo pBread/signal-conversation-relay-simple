@@ -35,10 +35,11 @@ app.post("/incoming-call", async (req, res) => {
     speechModel: "nova-3-general",
 
     ttsProvider: "ElevenLabs",
-    voice: voices.en.ana,
+    voice: voices.en.jessica_anne,
   };
 
   const cr = connect.conversationRelay(args);
+
   cr.parameter({ name: "greeting", value: args.welcomeGreeting });
 
   const twiml = response.toString();

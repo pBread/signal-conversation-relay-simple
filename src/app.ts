@@ -24,38 +24,23 @@ app.post("/incoming-call", async (req, res) => {
   log.webhook("/incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
-  // IVR
-  response.say(
-    "Hi, you've reach Owl Inc. Press 1 for support, press 2 for some other department, etc.",
-  );
 
-  response.gather({
-    action: `https://${HOSTNAME}/gather`,
-    input: ["dtmf"],
-    finishOnKey: "#",
-  });
+  const connect = response.connect();
+  const args: ConversationRelayParams = {
+    url: `wss://${HOSTNAME}/relay`,
+    welcomeGreeting:
+      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
 
-  // // RELAY
-  // const connect = response.connect();
+    transcriptionProvider: "deepgram",
+    speechModel: "nova-3-general",
 
-  // const args: ConversationRelayParams = {
-  //   url: `wss://${HOSTNAME}/relay`,
-  //   welcomeGreeting:
-  //     "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
-
-  //   transcriptionProvider: "deepgram",
-  //   speechModel: "nova-3-general",
-
-  //   ttsProvider: "ElevenLabs",
-  //   voice: voices.en.jessica_anne,
-  // };
-
-  // const cr = connect.conversationRelay(args);
-
-  // cr.parameter({ name: "greeting", value: args.welcomeGreeting });
+    ttsProvider: "ElevenLabs",
+    voice: voices.en.jessica_anne,
+  };
+  const cr = connect.conversationRelay(args);
 
   const twiml = response.toString();
-  log.xml("twiml", twiml);
+  log.xml("twiml", twiml); // todo: add formatting to logger for Gather
   res.type("text/xml").send(twiml);
 });
 
@@ -71,10 +56,6 @@ app.ws("/relay", (ws, req) => {
   // payload with session details
   wss.on("setup", (ev) => {
     log.info("relay.setup", ev);
-
-    // // RELAY
-    // const { greeting } = ev;
-    // if (greeting) store.msgs.push({ role: "assistant", content: greeting });
   });
 
   // user speaking
@@ -82,9 +63,8 @@ app.ws("/relay", (ws, req) => {
     if (!ev.last) return; // ignore partial speech
     log.cyan("relay.prompt", ev);
 
-    // // RELAY
-    // store.msgs.push({ role: "user", content: ev.voicePrompt });
-    // llm.run();
+    store.msgs.push({ role: "assistant", content: ev.voicePrompt });
+    llm.run();
   });
 
   // user interrupts the bot
@@ -96,8 +76,7 @@ app.ws("/relay", (ws, req) => {
   llm.on("text", (text, last, transcript) => {
     if (last) log.pink("llm.text", transcript);
 
-    // // RELAY
-    // wss.sendTextToken(text, last);
+    wss.sendTextToken(text, last);
   });
 });
 

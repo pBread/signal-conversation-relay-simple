@@ -3,7 +3,10 @@ import { ResponseInputItem } from "openai/resources/responses/responses.mjs";
 import VoiceResponse from "twilio/lib/twiml/VoiceResponse.js";
 
 export interface ConversationRelayParams
-  extends VoiceResponse.ConversationRelayAttributes {
+  extends Omit<
+    VoiceResponse.ConversationRelayAttributes,
+    "ttsLanguage" | "transcriptionLanguage"
+  > {
   transcriptionProvider?: "deepgram" | "google";
   ttsProvider?: "ElevenLabs" | "google" | "amazon";
 

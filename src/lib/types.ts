@@ -6,6 +6,55 @@ export interface ConversationRelayParams
   extends VoiceResponse.ConversationRelayAttributes {
   transcriptionProvider?: "deepgram" | "google";
   ttsProvider?: "ElevenLabs" | "google" | "amazon";
+
+  speechModel?: /** Deepgram */
+  | "nova-3-general"
+
+    /** Deepgram */
+    | "nova-2"
+    /** Deepgram */
+    | "nova-2-phonecall"
+    /** Deepgram */
+    | "nova-2-meeting"
+    /** Deepgram */
+    | "nova-2-finance"
+    /** Deepgram */
+    | "nova-2-conversationalai"
+    /** Deepgram */
+    | "nova-2-voicemail"
+    /** Deepgram */
+    | "nova-2-medical"
+    /** Deepgram */
+    | "nova-2-drivethru"
+    /** Deepgram */
+    | "nova-2-automotive"
+    /** Deepgram */
+    | "nova-2-atc"
+    /** Deepgram */
+    | "nova-2-video"
+    /** Deepgram */
+    | "nova-2-video"
+    /** Deepgram */
+    | "nova-2-video"
+
+    /** Google */
+    | "long"
+    /** Google */
+    | "short"
+    /** Google */
+    | "telephony"
+    /** Google */
+    | "telephony_short"
+    /** Google */
+    | "medical_dictation"
+    /** Google */
+    | "medical_conversation"
+    /** Google */
+    | "chirp_2"
+    /** Google */
+    | "chirp_telephony"
+    /** Google */
+    | "chirp";
 }
 
 export class TypedEventEmitter<Events = {}> extends EventEmitter {

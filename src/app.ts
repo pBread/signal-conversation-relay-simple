@@ -70,9 +70,9 @@ app.ws("/relay", (ws, req) => {
   wss.on("setup", (ev) => {
     log.info("relay.setup", ev);
 
-    // RELAY
-    const { greeting } = ev;
-    if (greeting) store.msgs.push({ role: "assistant", content: greeting });
+    // // RELAY
+    // const { greeting } = ev;
+    // if (greeting) store.msgs.push({ role: "assistant", content: greeting });
   });
 
   // user speaking
@@ -80,9 +80,9 @@ app.ws("/relay", (ws, req) => {
     if (!ev.last) return; // ignore partial speech
     log.cyan("relay.prompt", ev);
 
-    // RELAY
-    store.msgs.push({ role: "user", content: ev.voicePrompt });
-    llm.run();
+    // // RELAY
+    // store.msgs.push({ role: "user", content: ev.voicePrompt });
+    // llm.run();
   });
 
   // user interrupts the bot
@@ -94,8 +94,8 @@ app.ws("/relay", (ws, req) => {
   llm.on("text", (text, last, transcript) => {
     if (last) log.pink("llm.text", transcript);
 
-    // RELAY
-    wss.sendTextToken(text, last);
+    // // RELAY
+    // wss.sendTextToken(text, last);
   });
 });
 

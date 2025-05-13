@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { spawn } from "child_process";
 
-const { HOSTNAME, PORT = "8080" } = process.env;
+const { HOSTNAME, PORT = "3333" } = process.env;
 
 async function execNgrok(args = []) {
   return new Promise((resolve) => {

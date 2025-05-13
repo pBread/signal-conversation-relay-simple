@@ -128,8 +128,6 @@ export function prettyXML(xml: string): string {
     },
   );
 
-  //
-
   const parameterValues: string[] = [];
   let valueIndex = 0;
   formatted = formatted.replace(

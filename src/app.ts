@@ -13,7 +13,7 @@ import type {
 import { LLMService } from "./llm.ts";
 import * as voices from "./voices.ts";
 
-const { HOSTNAME, PORT = 8080 } = process.env;
+const { HOSTNAME, PORT = 3333 } = process.env;
 
 const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
@@ -24,24 +24,15 @@ app.post("/incoming-call", async (req, res) => {
   log.webhook("/incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
+  response.say("Ahoy, press 1 for ...");
+  response.gather({
+    action: `wss://${HOSTNAME}/gather`,
+    input: ["dtmf"],
+    finishOnKey: "#",
+  });
 
-  const connect = response.connect();
-  const args: ConversationRelayParams = {
-    url: `wss://${HOSTNAME}/relay`,
-    welcomeGreeting:
-      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
-
-    transcriptionProvider: "deepgram",
-    speechModel: "nova-3-general",
-
-    ttsProvider: "ElevenLabs",
-    voice: voices.en.jessica_anne,
-  };
-  const cr = connect.conversationRelay(args);
-
-  const twiml = response.toString();
-  log.xml("twiml", twiml); // todo: add formatting to logger for Gather
-  res.type("text/xml").send(twiml);
+  log.xml("twiml", response.toString()); // todo: add formatting to logger for Gather
+  res.type("text/xml").send(response.toString());
 });
 
 // Conversation Relay Connection

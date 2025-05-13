@@ -83,7 +83,6 @@ const executeTool = async (name: string, args: string) => {
 export class LLMService {
   client: AzureOpenAI;
   constructor(private store: Store) {
-    console.debug("llm", { apiKey, apiVersion, endpoint });
     this.client = new AzureOpenAI({ apiKey, apiVersion, endpoint });
   }
 

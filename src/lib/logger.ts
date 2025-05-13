@@ -1,16 +1,23 @@
-const NS_PAD = 30;
+const NS_PAD = 40;
 
 const CC = {
+  invert: "\x1b[7m",
+  clear: "\x1b[0m",
+
   red: "\x1b[31m",
   yellow: "\x1b[33m",
 
   cyan: "\x1b[36m",
+  brightCyan: "\x1b[96m",
+
   green: "\x1b[32m",
   magenta: "\x1b[35m",
 
-  invert: "\x1b[7m",
-
-  clear: "\x1b[0m",
+  teal: "\x1b[38;5;30m",
+  lightPurple: "\x1b[38;5;141m",
+  pink: "\x1b[38;5;219m",
+  orange: "\x1b[38;5;208m",
+  lightBlue: "\x1b[38;5;75m",
 };
 
 let start = Date.now();
@@ -20,6 +27,27 @@ export const log = {
     start = Date.now();
     console.info(title(label), ...args.map(stringify));
   },
+
+  green: (label: string, ...args: any) =>
+    console.info(title(label, CC.green), ...args.map(stringify)),
+
+  cyan: (label: string, ...args: any) =>
+    console.info(title(label, CC.cyan), ...args.map(stringify)),
+
+  brightCyan: (label: string, ...args: any) =>
+    console.info(title(label, CC.brightCyan), ...args.map(stringify)),
+
+  pink: (label: string, ...args: any) =>
+    console.info(title(label, CC.pink), ...args.map(stringify)),
+
+  yellow: (label: string, ...args: any) =>
+    console.info(title(label, CC.yellow), ...args.map(stringify)),
+
+  lightPurple: (label: string, ...args: any) =>
+    console.info(title(label, CC.lightPurple), ...args.map(stringify)),
+
+  lightBlue: (label: string, ...args: any) =>
+    console.info(title(label, CC.lightBlue), ...args.map(stringify)),
 
   info: (label: string, ...args: any) =>
     console.info(title(label), ...args.map(stringify)),
@@ -32,12 +60,12 @@ export const log = {
 // ========================================
 // Helpers
 // ========================================
-function title(label: string) {
+function title(label: string, cc = "") {
   const elapsed = sinceStart();
 
   const msg = `${elapsed}  ${label}`.padEnd(NS_PAD, " ");
 
-  return `${CC.invert}${msg}${CC.clear}`;
+  return `${cc}${CC.invert}${msg}${CC.clear}${cc}`;
 }
 
 function sinceStart() {

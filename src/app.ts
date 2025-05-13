@@ -58,7 +58,7 @@ app.ws("/relay", (ws, req) => {
 
   // payload with session details
   wss.on("setup", (ev) => {
-    log.info("on.setup", ev);
+    log.info("relay.setup", ev);
 
     const { greeting } = ev;
     if (greeting) store.msgs.push({ role: "assistant", content: greeting });
@@ -67,7 +67,7 @@ app.ws("/relay", (ws, req) => {
   // user speaking
   wss.on("prompt", (ev) => {
     if (!ev.last) return; // ignore partial speech
-    log.info("on.prompt", ev);
+    log.cyan("relay.prompt", ev);
 
     store.msgs.push({ role: "user", content: ev.voicePrompt });
     llm.run();
@@ -75,12 +75,12 @@ app.ws("/relay", (ws, req) => {
 
   // user interrupts the bot
   wss.on("interrupt", (ev) => {
-    log.info("on.interrupt", ev);
+    log.cyan("relay.interrupt", ev);
   });
 
   // llm wants to speak
   llm.on("text", (text, last, transcript) => {
-    if (last) log.info("llm.text", transcript);
+    if (last) log.pink("llm.text", transcript);
 
     wss.sendTextToken(text, last);
   });

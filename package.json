@@ -1,30 +1,27 @@
 {
-  "name": "forge-in-a-box-cr",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "This repo demonstrates building an interactive voice assistant using Twilio's `<ConversationRelay>` and an OpenAI LLM backend.",
-  "main": "index.js",
+  "author": "https://github.com/pBread",
+  "name": "signal-simple-conversation-relay",
   "scripts": {
-    "dev": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --exec tsx src/app.ts --delay 1500ms",
+    "grok": "node scripts/ngrok.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pheathtwilio/forge-in-a-box-cr.git"
+  "type": "module",
+  "version": "1.0.0",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-ws": "^5.0.2",
+    "openai": "^4.98.0",
+    "twilio": "^5.6.0",
+    "ws": "^8.18.2"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pheathtwilio/forge-in-a-box-cr/issues"
-  },
-  "homepage": "https://github.com/pheathtwilio/forge-in-a-box-cr#readme",
   "devDependencies": {
-    "@fastify/formbody": "^8.0.2",
-    "@fastify/websocket": "^11.0.2",
-    "dotenv": "^16.4.7",
-    "fastify": "^5.2.1",
+    "@types/express": "^5.0.1",
+    "@types/express-ws": "^3.0.5",
+    "@types/node": "^22.15.17",
+    "@types/ws": "^8.18.1",
     "nodemon": "^3.1.10",
-    "openai": "^4.86.2"
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
   }
 }

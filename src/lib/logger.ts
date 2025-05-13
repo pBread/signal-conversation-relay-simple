@@ -1,12 +1,21 @@
 export const log = {
-  info: (title: string, ...args: any) => console.info(`${title}`, ...args),
-  error: (title: string, ...args: any) => console.info(`${title}`, ...args),
-  xml: (title: string, xml: string) => console.info(`${title}`, prettyXML(xml)),
+  info: (title: string, ...args: any) =>
+    console.info(`${title}`, ...args.map(stringify)),
+  error: (title: string, ...args: any) =>
+    console.info(`${title}`, ...args.map(stringify)),
+  xml: (title: string, xml: string) =>
+    console.info(`${title}`, prettyXML(redactPhoneNumbers(xml))),
 };
 
 // ========================================
 // Helpers
 // ========================================
+function stringify(item: any) {
+  if (typeof item === "object") return JSON.stringify(item);
+
+  return item;
+}
+
 export function prettyXML(xml: string): string {
   const maxParameterValueLength = 50;
   const indent = "  ";
@@ -98,4 +107,25 @@ export function prettyXML(xml: string): string {
   });
 
   return result.trim();
+}
+
+export function redactPhoneNumbers(input: string): string {
+  const phoneRegex = /(\+?1[-\s.]?)?\(?(\d{3})\)?[-\s.]?(\d{3})[-\s.]?(\d{4})/g;
+
+  return input.replace(
+    phoneRegex,
+    (match, countryCode, areaCode, prefix, lastFour) => {
+      // Preserve the +1 country code if it exists
+      const preservedCountryCode =
+        countryCode && countryCode.includes("+") ? countryCode : "";
+
+      // Count how many digits need to be redacted (excluding country code and last four)
+      const digitsInAreaCodeAndPrefix = 6; // 3 for area code + 3 for prefix
+
+      // Create bullet points for redacted digits
+      const bullets = "•".repeat(digitsInAreaCodeAndPrefix);
+
+      return `${preservedCountryCode}${bullets}${lastFour}`;
+    },
+  );
 }

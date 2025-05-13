@@ -1,5 +1,3 @@
-import "@types/twilio/lib/twiml/VoiceResponse";
-
 declare namespace NodeJS {
   export interface ProcessEnv {
     HOSTNAME: string;

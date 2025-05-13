@@ -3,13 +3,14 @@ import { AzureOpenAI } from "openai/index.mjs";
 import {
   ResponseInputItem,
   ResponseStreamEvent,
+  Tool,
 } from "openai/resources/responses/responses.mjs";
 import { Stream } from "openai/streaming.mjs";
 import { log } from "./lib/logger.ts";
 import { Store, TypedEventEmitter } from "./lib/types.ts";
 
 // ========================================
-// #region LLM Configuration
+// LLM Configuration
 // ========================================
 const {
   FOUNDRY_LLM_DEPLOYMENT: model,
@@ -30,7 +31,7 @@ Do not include emojis in your responses. Do not include bullet points, asterisks
 
 `;
 
-const tools = [
+const tools: Tool[] = [
   {
     type: "function",
     name: "get_weather",
@@ -101,7 +102,7 @@ export class LLMService {
         model,
         stream: true,
         instructions,
-        // @ts-ignore
+
         tools,
         ...(previous_response_id && input
           ? { previous_response_id, input }

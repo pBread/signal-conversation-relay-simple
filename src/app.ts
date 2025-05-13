@@ -88,5 +88,4 @@ app.ws("/relay", (ws, req) => {
 
 app.listen(PORT, () => {
   log.info(`server running on http://localhost:${PORT}`);
-  log.info(`public base URL https://${HOSTNAME}`);
 });

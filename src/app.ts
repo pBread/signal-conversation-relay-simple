@@ -31,6 +31,7 @@ app.post("/incoming-call", async (req, res) => {
 
   response.gather({
     action: `https://${HOSTNAME}/gather`,
+    input: ["dtmf"],
     finishOnKey: "#",
   });
 

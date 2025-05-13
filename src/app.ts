@@ -24,21 +24,7 @@ app.post("/incoming-call", async (req, res) => {
   log.info("incoming-call", CallSid);
 
   const response = new twilio.twiml.VoiceResponse();
-  const connect = response.connect();
-
-  const args: ConversationRelayParams = {
-    url: `wss://${HOSTNAME}/relay`,
-    welcomeGreeting:
-      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
-
-    transcriptionProvider: "deepgram",
-    speechModel: "nova-3-general",
-
-    ttsProvider: "ElevenLabs",
-    voice: voices.en.jessica_anne,
-  };
-
-  const cr = connect.conversationRelay(args);
+  response.say("Hello Twilions!");
 
   const twiml = response.toString();
   log.xml("twiml\n", twiml);

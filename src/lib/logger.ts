@@ -11,7 +11,8 @@ export const log = {
 // Helpers
 // ========================================
 function stringify(item: any) {
-  if (typeof item === "object") return JSON.stringify(item);
+  if (typeof item === "object") return redactPhoneNumbers(JSON.stringify(item));
+  if (typeof item === "string") return redactPhoneNumbers(item);
 
   return item;
 }

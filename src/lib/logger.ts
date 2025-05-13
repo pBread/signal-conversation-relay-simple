@@ -92,32 +92,62 @@ export function prettyXML(xml: string): string {
   const maxParameterValueLength = 50;
   const indent = "  ";
 
+  // squash superfluous whitespace between tags
   let formatted = xml.replace(/>\s*</g, "><");
 
+  /* ───────────────────────────────────
+   *  1.  ConversationRelay  (unchanged)
+   * ─────────────────────────────────── */
   formatted = formatted.replace(
     /<ConversationRelay\b([^>]*)>/g,
     (match, rawAttrs) => {
-      // keep track of self-closing syntax (unlikely but just in case)
       const selfClose = rawAttrs.trim().endsWith("/");
-
-      // strip the trailing '/' if present so it doesn’t end up on a new line
       const attrsPart = selfClose
         ? rawAttrs.trim().slice(0, -1).trim()
         : rawAttrs;
 
-      // split attributes safely: <name="value"> where value cannot contain "
       const attrs = attrsPart.match(/\S+="[^"]*"/g) || [];
 
-      // join them, each on its own line starting with a tab
       const prettyAttrs = attrs.map((a) => `\t${a}`).join("\n");
 
-      // rebuild the tag
       return `<ConversationRelay\n${prettyAttrs}\n${selfClose ? "/>" : ">"}`;
     },
   );
 
+  /* ───────────────────────────────────
+   *  2.  Gather  (new)
+   *      Produces e.g.
+   *      <Gather
+   *        action="…"
+   *        input="…"
+   *        finishOnKey="#"/>
+   * ─────────────────────────────────── */
+  formatted = formatted.replace(/<Gather\b([^>]*)>/g, (match, rawAttrs) => {
+    const selfClose = rawAttrs.trim().endsWith("/");
+    const attrsPart = selfClose
+      ? rawAttrs.trim().slice(0, -1).trim()
+      : rawAttrs;
+
+    const attrs = attrsPart.match(/\S+="[^"]*"/g) || [];
+
+    // Combine the last attribute and "/>" on the same line when self-closing
+    const prettyAttrs = attrs
+      .map((a, i) => `\t${a}${selfClose && i === attrs.length - 1 ? "/>" : ""}`)
+      .join("\n");
+
+    return selfClose
+      ? `<Gather\n${prettyAttrs}` // already closed above
+      : `<Gather\n${prettyAttrs}\n>`;
+  });
+
+  /* ───────────────────────────────────
+   *  3.  Re-insert newlines before tags
+   * ─────────────────────────────────── */
   formatted = formatted.replace(/</g, "\n<");
 
+  /* ───────────────────────────────────
+   *  4.  Handle CDATA / comments
+   * ─────────────────────────────────── */
   const cdataAndComments: string[] = [];
   let cdataIndex = 0;
   formatted = formatted.replace(
@@ -128,6 +158,9 @@ export function prettyXML(xml: string): string {
     },
   );
 
+  /* ───────────────────────────────────
+   *  5.  Truncate <Parameter value="…">
+   * ─────────────────────────────────── */
   const parameterValues: string[] = [];
   let valueIndex = 0;
   formatted = formatted.replace(
@@ -141,6 +174,9 @@ export function prettyXML(xml: string): string {
     },
   );
 
+  /* ───────────────────────────────────
+   *  6.  Pretty-print with indentation
+   * ─────────────────────────────────── */
   let result = "";
   let indentLevel = 0;
   const lines = formatted.split("\n");
@@ -148,10 +184,10 @@ export function prettyXML(xml: string): string {
   for (let line of lines) {
     if (line.trim() === "") continue;
 
-    const isClosingTag = line.indexOf("</") === 0;
-    const isSelfClosingTag = line.indexOf("/>") >= 0;
+    const isClosingTag = line.startsWith("</");
+    const isSelfClosingTag = line.includes("/>");
     const isOpeningAndClosingTag =
-      !isSelfClosingTag && line.indexOf("<") === 0 && line.indexOf("</") > 0;
+      !isSelfClosingTag && line.startsWith("<") && line.includes("</");
 
     if (isClosingTag || isOpeningAndClosingTag) indentLevel--;
 
@@ -161,12 +197,15 @@ export function prettyXML(xml: string): string {
       !isClosingTag &&
       !isSelfClosingTag &&
       !isOpeningAndClosingTag &&
-      line.indexOf("<") === 0
+      line.startsWith("<")
     ) {
       indentLevel++;
     }
   }
 
+  /* ───────────────────────────────────
+   *  7.  Restore truncated values / CDATA
+   * ─────────────────────────────────── */
   result = result.replace(/\[TRUNCATED_VALUE_(\d+)\]/g, (_, i) => {
     const v = parameterValues[+i];
     return `${v.substring(0, maxParameterValueLength)}… (${v.length} chars)`;

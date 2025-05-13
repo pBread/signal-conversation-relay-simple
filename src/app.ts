@@ -25,11 +25,12 @@ app.post("/incoming-call", async (req, res) => {
 
   const response = new twilio.twiml.VoiceResponse();
   // IVR
-  response.say("Hello there");
+  response.say(
+    "Hi, you've reach Owl Inc. Press 1 for support, press 2 for some other department, etc.",
+  );
 
   response.gather({
     action: `https://${HOSTNAME}/gather`,
-    partialResultCallback: `https://${HOSTNAME}/gather`,
     finishOnKey: "#",
   });
 

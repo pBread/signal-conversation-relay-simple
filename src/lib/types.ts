@@ -11,6 +11,9 @@ export interface ConversationRelayParams
   | "nova-3-general"
 
     /** Deepgram */
+    | "nova-3-medical"
+
+    /** Deepgram */
     | "nova-2"
     /** Deepgram */
     | "nova-2-phonecall"

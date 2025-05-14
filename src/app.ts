@@ -2,7 +2,6 @@ import "dotenv/config";
 import express from "express";
 import ExpressWs from "express-ws";
 import twilio from "twilio";
-
 import { log } from "./lib/logger.ts";
 import { TypedWs } from "./lib/typed-ws.ts";
 import type {

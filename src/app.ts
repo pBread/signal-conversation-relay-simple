@@ -5,8 +5,13 @@ import twilio from "twilio";
 
 import { log } from "./lib/logger.ts";
 import { TypedWs } from "./lib/typed-ws.ts";
-import type { IncomingCallPayload, Store } from "./lib/types.ts";
+import type {
+  ConversationRelayParams,
+  IncomingCallPayload,
+  Store,
+} from "./lib/types.ts";
 import { LLMService } from "./llm.ts";
+import * as voices from "./voices.ts";
 
 const { HOSTNAME, PORT = 3333 } = process.env;
 
@@ -27,7 +32,7 @@ app.post("/incoming-call", async (req, res) => {
     finishOnKey: "#",
   });
 
-  log.xml("twiml", response.toString()); // todo: add formatting to logger for Gather; todo: remove
+  log.xml("twiml", response.toString());
   res.type("text/xml").send(response.toString());
 });
 
@@ -51,14 +56,14 @@ app.ws("/relay", (ws, req) => {
     if (last) log.pink("llm.text", transcript);
   });
 
-  // payload with session details
-  wss.on("setup", (ev) => {
-    log.info("relay.setup", ev);
-  });
-
   // user interrupts the bot
   wss.on("interrupt", (ev) => {
     log.cyan("relay.interrupt", ev);
+  });
+
+  // payload with session details
+  wss.on("setup", (ev) => {
+    log.info("relay.setup", ev);
   });
 });
 

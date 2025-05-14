@@ -81,7 +81,6 @@ function sinceStart() {
   const ms = elapsed % 1000;
 
   return (
-    `${min.toString().padStart(2, "0")}m ` +
     `${sec.toString().padStart(2, "0")}s ` +
     `${ms.toString().padStart(3, "0")}ms`
   );

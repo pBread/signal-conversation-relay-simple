@@ -8,7 +8,6 @@ import { TypedWs } from "./lib/typed-ws.ts";
 import type {
   ConversationRelayParams,
   IncomingCallPayload,
-  Store,
 } from "./lib/types.ts";
 import { LLMService } from "./llm.ts";
 import * as voices from "./voices.ts";
@@ -25,19 +24,12 @@ app.post("/incoming-call", async (req, res) => {
 
   const response = new twilio.twiml.VoiceResponse();
 
-  const connect = response.connect();
-  const args: ConversationRelayParams = {
-    welcomeGreeting:
-      "Hello! I am a voice assistant powered by Twilio Conversation Relay and Azure Foundry!",
-    url: `wss://${HOSTNAME}/relay`,
-
-    transcriptionProvider: "deepgram",
-    speechModel: "nova-3-general",
-
-    ttsProvider: "ElevenLabs",
-    voice: voices.english.jessica_anne,
-  };
-  const cr = connect.conversationRelay(args);
+  response.say("Ahoy, press 1, or 2, or 3");
+  response.gather({
+    action: `https://${HOSTNAME}/gather`,
+    input: ["dtmf"],
+    finishOnKey: "#",
+  });
 
   log.xml("twiml", response.toString());
   res.type("text/xml").send(response.toString());
@@ -48,28 +40,17 @@ app.ws("/relay", (ws, req) => {
   log.info("relay", "initialized");
 
   const wss = new TypedWs(ws);
-
-  const store: Store = { context: {}, msgs: [] };
-  const llm = new LLMService(store);
+  const llm = new LLMService();
 
   // user speaking
   wss.on("prompt", (ev) => {
     if (!ev.last) return; // ignore partial speech
     log.cyan("relay.prompt", ev);
-
-    store.msgs.push({
-      role: "assistant",
-      content: ev.voicePrompt,
-    });
-
-    llm.run();
   });
 
   // llm wants to speak
   llm.on("text", (text, last, transcript) => {
     if (last) log.llm("llm.text", transcript);
-
-    wss.sendTextToken(text, last);
   });
 
   // user interrupts the bot

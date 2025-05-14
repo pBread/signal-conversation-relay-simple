@@ -82,12 +82,19 @@ const executeTool = async (name: string, args: string) => {
 
 export class LLMService {
   client: AzureOpenAI;
-  constructor(private store: Store) {
+
+  store: Store = { context: {}, msgs: [] };
+  constructor() {
     this.client = new AzureOpenAI({ apiKey, apiVersion, endpoint });
   }
 
   run = async () => {
     await this.doResponse();
+  };
+
+  addMessage = (msg: ResponseInputItem) => {
+    this.store.msgs.push(msg);
+    return this;
   };
 
   stream: Stream<ResponseStreamEvent> | undefined;

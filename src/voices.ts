@@ -1,5 +1,5 @@
 /** Arabic */
-export const ar = {
+export const arabic = {
   /** egyptian, middle_aged, male, ar, narrative_story */
   haytham: "UR972wNGq3zluze0LoIp",
   /** egyptian, crisp, middle_aged, male, ar, narrative_story */
@@ -15,7 +15,7 @@ export const ar = {
 };
 
 /** Bulgarian */
-export const bg = {
+export const bulgarian = {
   /** sofia, casual, young, female, bg, entertainment_tv */
   alexandra: "pREMn4INXSs2KOPsNcsD",
   /** sofia, confident, young, female, bg, conversational */
@@ -25,7 +25,7 @@ export const bg = {
 };
 
 /** Czech */
-export const cs = {
+export const czech = {
   /** standard, casual, middle_aged, male, cs, conversational */
   adam: "uYFJyGaibp4N2VwYQshk",
   /** standard, neutral, middle_aged, female, cs, informative_educational */
@@ -47,7 +47,7 @@ export const cs = {
 };
 
 /** Danish */
-export const da = {
+export const danish = {
   /** standard, calm, young, male, da, informative_educational */
   christian_danish_calm_voice: "6SjhOkgKPuHxm8q0eIyp",
   /** jutlandic, pleasant, middle_aged, male, da, narrative_story */
@@ -59,7 +59,7 @@ export const da = {
 };
 
 /** German */
-export const de = {
+export const german = {
   /** , intense, young, male, de, characters_animation */
   albert_funny_cartoon_character: "f2yUVfK5jdm78zlpcZ8C",
   /** standard, calm, middle_aged, male, de, social_media */
@@ -259,13 +259,13 @@ export const de = {
 };
 
 /** Greek */
-export const el = {
+export const greek = {
   /** standard, casual, young, female, el, advertisement */
   agapi: "XZ8zM3TBDcQnbvfD1YDK",
 };
 
 /** English */
-export const en = {
+export const english = {
   /** british, upbeat, young, female, en, narrative_story */
   ana: "rCmVtv8cYU60uhlsOo1M",
 
@@ -811,7 +811,7 @@ export const en = {
 };
 
 /** Spanish */
-export const es = {
+export const spanish = {
   /** latin american, casual, middle_aged, male, es, narrative_story */
   agustin_deep_resonant_voice_for_audiobooks_and_videos: "HbJt0yomFFBFMBQ7I69w",
   /** latin american, casual, middle_aged, male, es, narrative_story */
@@ -1132,7 +1132,7 @@ export const es = {
 };
 
 /** Finnish */
-export const fi = {
+export const finnish = {
   /** standard, upbeat, young, male, fi, conversational */
   jussi_strong_finnish_accent: "dlbXHgJnwobU5JdZ8F5M",
   /** western, calm, middle_aged, male, fi, narrative_story */
@@ -1140,7 +1140,7 @@ export const fi = {
 };
 
 /** Filipino */
-export const fil = {
+export const filipino = {
   /** standard, intense, middle_aged, male, fil, social_media */
   aron_manyakis_premier_erotic_and_seductive_storyteller:
     "X07kfg6M8FVgJU3DQ5gY",
@@ -1232,7 +1232,7 @@ export const fil = {
 };
 
 /** French */
-export const fr = {
+export const france = {
   /** standard, professional, middle_aged, male, fr, informative_educational */
   adam_formation_tutors_education: "TGAegA0zNRi8I6nUdq3i",
   /** standard, deep, middle_aged, male, fr, narrative_story */
@@ -1438,7 +1438,7 @@ export const fr = {
 };
 
 /** Hindi */
-export const hi = {
+export const hindi = {
   /** standard, deep, middle_aged, male, hi, narrative_story */
   aaditya_k_calm_conversational_hindi_voice: "DQuoFsZ3oda1diTerwpq",
   /** standard, deep, middle_aged, male, hi, narrative_story */
@@ -1652,7 +1652,7 @@ export const hi = {
 };
 
 /** Croatian */
-export const hr = {
+export const croatian = {
   /** standard, crisp, young, female, hr, conversational */
   ana_warm_and_expressive: "NfdaqpoTPn7nF7WBBRTv",
   /** standard, calm, middle_aged, male, hr, narrative_story */
@@ -1662,13 +1662,13 @@ export const hr = {
 };
 
 /** Hungarian */
-export const hu = {
+export const hungarian = {
   /** standard, casual, young, male, hu, narrative_story */
   magyar_ferfi_hungarian_male: "TumdjBNWanlT3ysvclWh",
 };
 
 /** Indonesian */
-export const id = {
+export const indonesian = {
   /** standard, casual, young, male, id, conversational */
   abyasa: "WXmGNP5rvPWuO0RYTqfP",
   /** standard, classy, middle_aged, female, id, informative_educational */
@@ -1726,7 +1726,7 @@ export const id = {
 };
 
 /** Italian */
-export const it = {
+export const italian = {
   /** standard, meditative, middle_aged, female, it, conversational */
   aida_deep_female_italian_voice: "CiwzbDpaN3pQXjTgx3ML",
   /** standard, calm, middle_aged, male, it, informative_educational */
@@ -1803,7 +1803,7 @@ export const it = {
 };
 
 /** Japanese */
-export const ja = {
+export const japanese = {
   /** standard, calm, young, male, ja, conversational */
   asahi_japanese_male: "GKDaBI8TKSBJVhsCLD6n",
   /** standard, confident, young, male, ja, entertainment_tv */
@@ -1819,7 +1819,7 @@ export const ja = {
 };
 
 /** Korean */
-export const ko = {
+export const korean = {
   /** seoul, formal, young, female, ko, narrative_story */
   anna_kim: "uyVNoMrnUku1dZyVEXwD",
   /** standard, relaxed, middle_aged, male, ko, narrative_story */
@@ -1876,7 +1876,7 @@ export const ko = {
 };
 
 /** Dutch */
-export const nl = {
+export const dutch = {
   /** standard, casual, middle_aged, male, nl, narrative_story */
   arjen_dutch_male_sounds_calm_and_familiar: "62klqbsYqbynbr66ypRt",
   /** standard, formal, middle_aged, male, nl, entertainment_tv */
@@ -1921,7 +1921,7 @@ export const nl = {
 };
 
 /** Norwegian */
-export const no = {
+export const norwegian = {
   /** oslo, crisp, middle_aged, male, no, conversational */
   helge: "vUmLiNBm6MDcy1NUHaVr",
   /** standard, confident, young, male, no, informative_educational */
@@ -1931,7 +1931,7 @@ export const no = {
 };
 
 /** Polish */
-export const pl = {
+export const polish = {
   /** mazovian, calm, middle_aged, male, pl, narrative_story */
   adam: "hIssydxXZ1WuDorjx6Ic",
   /** standard, pleasant, middle_aged, male, pl, narrative_story */
@@ -1971,7 +1971,7 @@ export const pl = {
 };
 
 /** Portuguese */
-export const pt = {
+export const portuguese = {
   /** brazilian, calm, middle_aged, male, pt, narrative_story */
   adriano_narrator: "hwnuNyWkl9DjdTFykrN6",
   /** brazilian, formal, young, female, pt, narrative_story */
@@ -2059,7 +2059,7 @@ export const pt = {
 };
 
 /** Romanian */
-export const ro = {
+export const romanian = {
   /** standard, confident, middle_aged, male, ro, conversational */
   alex_max: "xHIzJ4zBhlGcvJscsdON",
   /** standard, intense, middle_aged, female, ro, narrative_story */
@@ -2091,7 +2091,7 @@ export const ro = {
 };
 
 /** Russian */
-export const ru = {
+export const russian = {
   /** standard, classy, young, male, ru, social_media */
   alexander: "bqbHGIIO5oETYIqhWmfk",
   /** standard, deep, middle_aged, male, ru, entertainment_tv */
@@ -2127,7 +2127,7 @@ export const ru = {
 };
 
 /** Slovak */
-export const sk = {
+export const slovak = {
   /** central, calm, middle_aged, male, sk, conversational */
   alex: "5TUD5nYN251MvBggIfLu",
   /** central, calm, young, female, sk, narrative_story */
@@ -2137,7 +2137,7 @@ export const sk = {
 };
 
 /** Swedish */
-export const sv = {
+export const swedish = {
   /** stockholm, confident, middle_aged, male, sv, narrative_story */
   adam_composer_stockholm: "x0u3EW21dbrORJzOq1m9",
   /** , upbeat, middle_aged, male, sv, advertisement */
@@ -2158,7 +2158,7 @@ export const sv = {
 };
 
 /** Tamil */
-export const ta = {
+export const tamil = {
   /** standard, modulated, young, female, ta, conversational */
   aaira_calm_conversational_voice: "1XNFRxE3WBB7iI0jnm7p",
   /** standard, upbeat, middle_aged, male, ta, conversational */
@@ -2196,7 +2196,7 @@ export const ta = {
 };
 
 /** Turkish */
-export const tr = {
+export const turkish = {
   /** istanbul, casual, middle_aged, female, tr, conversational */
   ahu_the_clone_that_speaks_like_you: "xyqF3vGMQlPk3e7yA4DI",
   /** istanbul, casual, middle_aged, male, tr, social_media */
@@ -2476,7 +2476,7 @@ export const tr = {
 };
 
 /** Ukrainian */
-export const uk = {
+export const ukrainian = {
   /** standard, classy, middle_aged, male, uk, informative_educational */
   alex_nekrasov: "9Sj8ugvpK1DmcAXyvi3a",
   /** standard, casual, middle_aged, male, uk, narrative_story */
@@ -2500,7 +2500,7 @@ export const uk = {
 };
 
 /** Vietnamese */
-export const vi = {
+export const vietnamese = {
   /** standard, mature, old, male, vi, entertainment_tv */
   actor_pham_hung: "M1eOJnaNVAbMVhDoXfRb",
   /** standard, calm, middle_aged, male, vi, narrative_story */
@@ -2552,7 +2552,7 @@ export const vi = {
 };
 
 /** Chinese */
-export const zh = {
+export const chinese = {
   /** standard, calm, middle_aged, male, zh, narrative_story */
   james_gao: "4VZIsMPtgggwNg7OXbPY",
   /** standard, confident, young, female, zh, conversational */

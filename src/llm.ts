@@ -117,7 +117,7 @@ export class LLMService {
 
     for await (const chunk of this.stream) {
       if (chunk.type === "response.created") {
-        log.info("llm", "azure llm stream starting");
+        log.llm("llm", "azure llm stream starting");
         responseId = chunk.response.id;
       }
 
@@ -154,7 +154,7 @@ export class LLMService {
             output: "",
           };
 
-          log.info("llm", `${chunk.item.name}(${chunk.item.arguments})`);
+          log.llm("llm", `${chunk.item.name}(${chunk.item.arguments})`);
 
           const result = await executeTool(
             chunk.item.name,
@@ -163,7 +163,7 @@ export class LLMService {
           toolItem.output = JSON.stringify(result);
           toolItems.push(toolItem);
 
-          log.info("llm", `tool result: ${toolItem.output}`);
+          log.llm("llm", `tool result: ${toolItem.output}`);
         }
       }
     }

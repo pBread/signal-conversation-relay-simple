@@ -1,4 +1,4 @@
-const NS_PAD = 40;
+const NS_PAD = 32;
 
 const CC = {
   invert: "\x1b[7m",
@@ -27,6 +27,12 @@ export const log = {
     start = Date.now();
     console.info(title(label), ...args.map(stringify));
   },
+
+  llm: (label: string, ...args: any) =>
+    console.info(title(label, CC.pink), ...args.map(stringify)),
+
+  relay: (label: string, ...args: any) =>
+    console.info(title(label, CC.cyan), ...args.map(stringify)),
 
   green: (label: string, ...args: any) =>
     console.info(title(label, CC.green), ...args.map(stringify)),

@@ -42,7 +42,7 @@ const tools: Tool[] = [
       properties: {
         location: {
           type: "string",
-          enum: ["san_francisco", "chicago", "seattle", "guangzhou"],
+          enum: ["san_francisco", "chicago", "seattle", "guangzhou", "denver"],
         },
       },
       required: ["location"],
@@ -57,7 +57,7 @@ const get_weather = (argumentString: string) => {
 
   switch (args.location.toLowerCase()) {
     case "san_francisco":
-      return { weather: "chilly, probably rainy" };
+      return { weather: "a bit chilly" };
 
     case "chicago":
       return { weather: "it's cold" };
@@ -67,6 +67,9 @@ const get_weather = (argumentString: string) => {
 
     case "guangzhou":
       return { weather: "it's sunny" };
+
+    case "denver":
+      return { weather: "sunny but there's snow" };
   }
 };
 

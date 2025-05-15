@@ -36,7 +36,6 @@ app.post("/incoming-call", async (req, res) => {
 // Conversation Relay Connection
 app.ws("/relay", (ws, req) => {
   log.info("relay", "initialized");
-
   const wss = new TypedWs(ws);
   const llm = new LLMService();
 

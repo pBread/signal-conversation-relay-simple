@@ -18,8 +18,7 @@ app.use(express.urlencoded({ extended: true })).use(express.json());
 
 // Incoming Call Webhook Handler
 app.post("/incoming-call", async (req, res) => {
-  const { CallSid } = req.body as IncomingCallPayload;
-  log.webhook("/incoming-call", CallSid);
+  log.webhook("/incoming-call");
 
   const response = new twilio.twiml.VoiceResponse();
 
